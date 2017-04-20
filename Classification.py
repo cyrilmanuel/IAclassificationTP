@@ -64,35 +64,3 @@ predicted_SGDC = text_clf_SGDC.predict(docs_test)
 print("\tPrécision des prediction BAYES \t : {0}".format(np.mean(predicted_NB == set_test.target)))
 print("\tPrécision des prediction SVM \t\t : {0}".format(np.mean(predicted_SGDC == set_test.target)))
 
-
-############################################################################
-################### STEP + | Tuning / Optimization #########################
-############################################################################
-
-'''
-Classifiers tend to have many parameters. It is possible to run exhaustive search
-of the best parameters on a grid of possible alues.
-'''
-
-# Possible parameters
-parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
-              'tfidf__use_idf': (True, False),
-              'clf__alpha': (1e-2, 1e-3),
-              }
-
-gs_clf = GridSearchCV(text_clf_SGDC, parameters, n_jobs=-1)  # Use all cores
-
-# Try fit on a subset of data
-gs_clf = gs_clf.fit(set_Training.data[:400], set_Training.target[:400])
-
-demoString = 'Superbe génial aimer beau'
-
-print("\nThe demo prediction for \"{0}\" is : {1}".format(demoString,
-                                                          set_Training.target_names[gs_clf.predict([demoString])[0]]))
-
-print("\n Meilleur score avec le SVM : {0}".format(gs_clf.best_score_))
-print("\nFound with the following parameters :\n")
-for param_name in sorted(parameters.keys()):
-    print("\t%s: %r" % (param_name, gs_clf.best_params_[param_name]))
-
-
