@@ -3,3 +3,4 @@ packaging==16.8
 pyparsing==2.2.0
 scikit-learn==0.18.1
 six==1.10.0
+numpy==1.8.0rc1
