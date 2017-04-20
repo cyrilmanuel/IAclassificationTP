@@ -9,7 +9,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import GridSearchCV
 
-
 # 1. chargement des sets de données
 
 # Determine les catégories
@@ -27,8 +26,6 @@ set_test = sklearn.datasets.load_files(
     description="Test data Tagged.",
     categories=categories, load_content=True, shuffle=True, encoding='latin-1', decode_error='strict',
     random_state=42, )
-
-
 
 # 2. vectorisation
 
@@ -64,3 +61,17 @@ predicted_SGDC = text_clf_SGDC.predict(docs_test)
 print("\tPrécision des prediction BAYES \t : {0}".format(np.mean(predicted_NB == set_test.target)))
 print("\tPrécision des prediction SVM \t\t : {0}".format(np.mean(predicted_SGDC == set_test.target)))
 
+
+# 6. utilisation des metrics
+
+print("\n\n Metrics")
+
+print("\n\nClassification Bayes")
+print(metrics.classification_report(set_test.target, predicted_NB, target_names=set_test.target_names))
+print("Confusion matrix Bayes")
+print(metrics.confusion_matrix(set_test.target, predicted_NB))
+
+print("\n\nClassification SVM")
+print(metrics.classification_report(set_test.target, predicted_SGDC, target_names=set_test.target_names))
+print("Confusion matrix SVM")
+print(metrics.confusion_matrix(set_test.target, predicted_SGDC))
