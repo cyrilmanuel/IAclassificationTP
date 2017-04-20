@@ -47,23 +47,23 @@ clf = MultinomialNB().fit(XtraininigTfidf, set_Training.target)
 
 docs_test = set_test.data  # Test documents
 
-# A pipeline with MultinomialNB (naïve Bayes)
+# pipeline MultinomialNB (naïve Bayes)
 text_clf_NB = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB()), ])
 
-# A pipeline with support vector machine (SVM)
+# pipeline support vector machine (SVM)
 text_clf_SGDC = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()),
                           ('clf', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, n_iter=5, random_state=42)), ])
 
 text_clf_NB = text_clf_NB.fit(set_Training.data, set_Training.target)
 _ = text_clf_SGDC.fit(set_Training.data, set_Training.target)
 
-# Predictions with both models
+# Predictions
 predicted_NB = text_clf_NB.predict(docs_test)
 predicted_SGDC = text_clf_SGDC.predict(docs_test)
 
-print("\nPrediction accuracies :")
-print("\tNaïve Bayes prediction \t : {0}".format(np.mean(predicted_NB == set_test.target)))
-print("\tSVM prediction \t\t : {0}".format(np.mean(predicted_SGDC == set_test.target)))
+print("\tPrécision des prediction BAYES \t : {0}".format(np.mean(predicted_NB == set_test.target)))
+print("\tPrécision des prediction SVM \t\t : {0}".format(np.mean(predicted_SGDC == set_test.target)))
+
 
 ############################################################################
 ################### STEP + | Tuning / Optimization #########################
