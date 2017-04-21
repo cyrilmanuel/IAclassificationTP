@@ -14,46 +14,46 @@ if __name__ == "__main__":
     print("----------------------------------------------------\n")
     print("Demarrage du tp.\n ")
     print("----------------------------------------------------\n")
-    print("définition des catégories : \n")
+    print("definition des categories : \n")
 
-    # Determine les catégories
+    # Determine les categories
     categories = ['neg', 'pos']
     print(str(categories) + "\n")
 
     print("----------------------------------------------------\n")
-    print("chargement des données de Training et Test \n")
+    print("chargement des donnees de Training et Test \n")
     print("----------------------------------------------------\n")
-    # chargement des données training et test
+    # chargement des donnees training et test
     set_Training = sklearn.datasets.load_files(
         "./TrainingSet/tagged/",
         description="Training data Tagged.",
         categories=categories, load_content=True, shuffle=True, encoding='latin-1', decode_error='strict',
         random_state=42, )
 
-    print("longueur des données training chargées : "+str(len(set_Training.data))+"\n")
+    print("longueur des donnees training chargees : " + str(len(set_Training.data)) + "\n")
     set_Test = sklearn.datasets.load_files(
         "./TestSet/tagged/",
         description="Test data Tagged.",
         categories=categories, load_content=True, shuffle=True, encoding='latin-1', decode_error='strict',
         random_state=42, )
 
-    print("longueur des données Test chargées : " + str(len(set_Test.data)) + "\n")
+    print("longueur des donnees Test chargees : " + str(len(set_Test.data)) + "\n")
 
     # -----------------------
     # -- 2. vectorisation  --
     # -----------------------
     print("----------------------------------------------------\n")
-    print("vectorisation des données\n")
+    print("vectorisation des donnees\n")
     print("----------------------------------------------------\n")
     vectCount = CountVectorizer()
     Xtraining = vectCount.fit_transform(set_Training.data)
-    print("nombre de fichier et de mots"+str(Xtraining.shape)+"\n")
+    print("nombre de fichier et de mots" + str(Xtraining.shape) + "\n")
 
     # -----------------------
     # -- 3. indexiations  ---
     # -----------------------
     print("----------------------------------------------------\n")
-    print("indexiations des données\n")
+    print("indexiations des donnees\n")
     print("----------------------------------------------------\n")
     tfidf_Transfo = TfidfTransformer()  # Transform a count matrix to a normalized tf or tf-idf representation
     XtraininigTfidf = tfidf_Transfo.fit_transform(Xtraining)
@@ -67,37 +67,37 @@ if __name__ == "__main__":
     print("----------------------------------------------------\n")
     clf = MultinomialNB().fit(XtraininigTfidf, set_Training.target)
 
-    print("première prédiction sans pipeline et sur des mots \n")
+    print("premiere prediction sans pipeline et sur des mots \n")
     print("----------------------------------------------------\n")
 
     docs_new = ['bien', 'mauvais']
-    print("mots à évaluer (prédire) : \n"+str(docs_new)+"\n")
+    print("mots a evaluer (predire) : \n" + str(docs_new) + "\n")
     X_new_counts = vectCount.transform(docs_new)
     X_new_tfidf = tfidf_Transfo.transform(X_new_counts)
 
     predicted = clf.predict(X_new_tfidf)
 
-    print("resultat de la prédiction sur les mots \n")
+    print("resultat de la prediction sur les mots \n")
     for doc, categories in zip(docs_new, predicted):
         print('le mot : %r => %s' % (doc, set_Training.target_names[categories]))
-
 
     # ---------------------
     # -- 5. Evaluations  --
     # ---------------------
 
     print("----------------------------------------------------\n")
-    print("Création d'un pipeline Bayes et SVM avec le train Test \n")
+    print("Creation d'un pipeline Bayes et SVM avec le train Test \n")
     print("----------------------------------------------------\n")
 
     docs_test = set_Test.data  # Test documents
 
-    # pipeline MultinomialNB (naïve Bayes)
+    # pipeline MultinomialNB (naive Bayes)
     text_clf_NB = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB()), ])
 
     # pipeline support vector machine (SVM)
     text_clf_SGDC = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()),
-                              ('clf', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, n_iter=5, random_state=42)), ])
+                              ('clf',
+                               SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, n_iter=5, random_state=42)), ])
 
     text_clf_NB = text_clf_NB.fit(set_Training.data, set_Training.target)
     _ = text_clf_SGDC.fit(set_Training.data, set_Training.target)
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     predicted_NB = text_clf_NB.predict(docs_test)
     predicted_SGDC = text_clf_SGDC.predict(docs_test)
 
-    print("\tPrécision des prediction BAYES \t : {0}".format(np.mean(predicted_NB == set_Test.target)))
-    print("\tPrécision des prediction SVM \t\t : {0}".format(np.mean(predicted_SGDC == set_Test.target)))
+    print("\tPrecision des prediction BAYES \t : {0}".format(np.mean(predicted_NB == set_Test.target)))
+    print("\tPrecision des prediction SVM \t\t : {0}".format(np.mean(predicted_SGDC == set_Test.target)))
 
     # ---------------------------------
     # -- 6. utilisation des metrics  --
@@ -152,11 +152,11 @@ if __name__ == "__main__":
     print("\nla prediction pour \"{0}\" : {1}".format(demoString, set_Training.target_names[
         gs_clf.predict([demoString])[0]]))
 
-    print("\nle meilleure score avec SVM {0}".format(gs_clf.best_score_))
-
     print("\n parametres choisis:\n")
     for param_name in sorted(parameters.keys()):
         print("\t%s: %r" % (param_name, gs_clf.best_params_[param_name]))
+
+    print("\nle meilleure score avec SVM {0}".format(gs_clf.best_score_))
 
     print("----------------------------------------------------\n")
     print("-------------------- Fin du TP ---------------------\n")
