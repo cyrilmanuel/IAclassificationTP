@@ -62,6 +62,15 @@ if __name__ == "__main__":
             fileSource = open(src, 'r')
             for line in fileSource:
                 for word in line.split("\t"):
+                    if ':' in word:
+                        tabwsep = word.split(":")
+                        for w in tabwsep :
+                            if w in separateur:
+                                # recupere le dernier mot de la ligne de 3
+                                tabWordFind = line.split("\t")[2]
+
+                                # ajout le mot au string  qui sera ecrit dans le fichier
+                                wordFind += tabWordFind.split("|")[0] if "|" in tabWordFind else tabWordFind
                     if word in separateur:
                         # recupere le dernier mot de la ligne de 3
                         tabWordFind = line.split("\t")[2]
@@ -79,7 +88,7 @@ if __name__ == "__main__":
 
     print("fin de l ecriture dans les dossiers \n")
     print("test de lecture du dernier fichier :\n")
-    print("file = "+str(lastFile) + "\n")
+    print("file = " + str(lastFile) + "\n")
 
     fileFinal = open(lastFile, 'r')
     for line in fileFinal:
